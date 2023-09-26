@@ -1,0 +1,428 @@
+---
+title: "Case Study: How Does a Bike-Share Navigate Speed?"
+author: "Saurabh Belsare"
+date: "2023-09-23"
+output: html_document
+---
+## Senario
+
+I am a junior data analyst working in the marketing analyst team at Cyclistic, a bike-share company in Chicago. The director of marketing believes the company’s future success depends on maximizing the number of annual memberships. Therefore, my team wants to understand how casual riders and annual members use Cyclistic bikes differently. From these insights, my team will design a new marketing strategy to convert casual riders into annual members. 
+
+**About the company**
+
+In 2016, Cyclistic launched a successful bike-share oering. Since then, the program has grown to a fleet of 5,824 bicycles that are geotracked and locked into a network of 692 stations across Chicago. The bikes can be unlocked from one station and returned to any other station in the system anytime. Until now, Cyclistic’s marketing strategy relied on building general awareness and appealing to broad consumer segments. One approach that helped make these things possible was the flexibility of its pricing plans: single-ride passes, full-day passes, and annual memberships. Customers who purchase single-ride or full-day passes are referred to as casual riders. Customers who purchase annual memberships are Cyclistic members. Cyclistic’s finance analysts have concluded that annual members are much more profitable than casual riders. Although the pricing flexibility helps Cyclistic attract more customers, The director of marketing believes that maximizing the number of annual members will be key to future growth. Rather than creating a marketing campaign that targets all-new customers, she believes there is a very good chance to convert casual riders into members. She notes that casual riders are already aware of the Cyclistic program and have chosen Cyclistic for their mobility needs.
+
+
+## Ask
+
+**1. Business Task** 
+In order to maximize the number of annual membership, I, data analyst, will find trend and patterns among casual riders and membership riders, and identify potential riders who can get benefit from annual membership. I do not need to raise awareness of annual membership among casual riders as they are already aware of the program.
+
+**2. Stakeholders**
+
++ **Lily Moreno** :- Director of marketing and manager.
++ **Cyclistic executive team** :- The notoriously detail-oriented executive team will decide whether to approve the recommended marketing program.
++ **Cyclistic marketing analytics team** :- A team of data analysts who are responsible for collecting, analyzing, and reportingdata that helps guide Cyclistic marketing strategy.
+
+
+## Prepare
+
+**1. Data Source ** :-Cyclistic’s historical trip data , you can acess the data [here](https://divvy-tripdata.s3.amazonaws.com/index.html). 
+
+**2. How data is organized ** :-The data is organized by monthly in .csv format. I will use Divvy’s, a bike-share program based in Chicago, data from Jan 2021 – Dec 2021 to complete this case study. 
+
+**3. Does data is ROCCC? ** :-The data is Reliable, Original, Comprehensive, Current and Cited. The data has been made available by Motivate International Inc. under this [license](https://divvybikes.com/data-license-agreement).
+
+**4. Limitations ** :- Data-privacy issues prohibit you from using riders’ personally identifiable information. This means that you won’t be able to connect pass purchases to credit card numbers to determine if casual riders live in the Cyclistic service area or if they have purchased multiple single passes.
+
+
+
+### Installing required packages
+```{r setup}
+options(repos = "https://cran.r-project.org")
+```
+
+
+```{r}
+install.packages("tidyverse")
+install.packages("lubridate")
+install.packages("dplyr")
+install.packages("janitor")
+install.packages("skimr")
+install.packages("ggplot2")
+```
+###Loading libraries
+
+```{r}
+library(tidyverse)
+library(lubridate)
+library(dplyr)
+library(janitor)
+library(skimr)
+library(ggplot2)
+```
+```{r}
+#Read the trip data from 01-2021 to 12-2021
+
+colnames(X202101_divvy_tripdata)
+colnames(X202102_divvy_tripdata)
+colnames(X202103_divvy_tripdata)
+colnames(X202104_divvy_tripdata)
+colnames(X202105_divvy_tripdata)
+colnames(X202106_divvy_tripdata)
+colnames(X202106_divvy_tripdata)
+colnames(X202107_divvy_tripdata)
+colnames(X202109_divvy_tripdata)
+colnames(X202110_divvy_tripdata)
+colnames(X202111_divvy_tripdata)
+colnames(X202112_divvy_tripdata)
+
+```
+
+```{r}
+#Take a look of data
+str(X202101_divvy_tripdata)
+str(X202102_divvy_tripdata)
+str(X202103_divvy_tripdata)
+str(X202104_divvy_tripdata)
+str(X202105_divvy_tripdata)
+str(X202106_divvy_tripdata)
+str(X202106_divvy_tripdata)
+str(X202107_divvy_tripdata)
+str(X202109_divvy_tripdata)
+str(X202110_divvy_tripdata)
+str(X202111_divvy_tripdata)
+str(X202112_divvy_tripdata)
+```
+### Merging all the files from Jan 2021 to Dec 2021 into one sigle file called all_trips.
+```{r}
+
+all_trips <- bind_rows(X202101_divvy_tripdata,X202102_divvy_tripdata,X202103_divvy_tripdata,X202104_divvy_tripdata,X202105_divvy_tripdata,X202106_divvy_tripdata,X202107_divvy_tripdata,X202108_divvy_tripdata,X202109_divvy_tripdata,X202110_divvy_tripdata,X202111_divvy_tripdata,X202112_divvy_tripdata)
+
+#To view our new file
+View(all_trips)
+```
+
+
+```{r}
+#Check for column name , if there is any missing column.
+colnames(all_trips)
+```
+### Take a look at data(data types, columns , rows.)
+```{r}
+glimpse(all_trips)
+```
+
+```{r}
+str(all_trips)
+```
+```{r}
+# To check if there is missing values in data.
+summary(all_trips)
+
+```
+## Process
+### Rename columns as per requirement(To make it easy to read and understand).
+```{r}
+all_trips <- rename(all_trips,
+                    trip_id = ride_id,
+                    bike_type = rideable_type,
+                    start_time = started_at,
+                    end_time = ended_at,
+                    start_station = start_station_name,
+                    ss_id = start_station_id,
+                    end_station = end_station_name,
+                    es_id = end_station_id,
+                    user_type = member_casual)
+
+
+```
+
+Adding some new columns, to make it easy for further analysis.
+```{r}
+all_trips$date <- as.Date(all_trips$start_time)
+all_trips$month <- format(as.Date(all_trips$date), "%m")
+all_trips$day <- format(as.Date(all_trips$date), "%d")
+all_trips$year <- format(as.Date(all_trips$date), "%Y")
+all_trips$day_of_week <- format(as.Date(all_trips$date), "%A")
+# Calculate ride length for all trips.
+all_trips$ride_length <- difftime(all_trips$end_time , all_trips$start_time)
+
+str(all_trips)
+
+colnames(all_trips)
+```
+Remove unnecessary columns.
+```{r}
+all_trips <- all_trips %>% 
+  select(-c(start_lat,start_lng,end_lng,end_lat))
+```
+
+
+```{r}
+# Convert "ride_length" from Double to numeric so we can run calculations on the data.
+all_trips$ride_length <- as.numeric(as.character(all_trips$ride_length))
+is.numeric(all_trips$ride_length)
+
+```
+**Remove bad data**
+Remove ride length data ,which is less that 0 and greater than 1440 because the ride length should not be negetive or greater than one day.
+
+```{r}
+#Create a new data frame to store these data.
+
+all_trips_v2 <- all_trips %>%
+  filter(ride_length > 0 & ride_length <= 1440)
+
+dim(all_trips)
+dim(all_trips_v2)
+View(all_trips_v2)
+summary(all_trips_v2)
+```
+
+Removing null values.
+```{r}
+# drop all NA's
+all_trips_v2 <- drop_na(all_trips_v2)
+dim(all_trips_v2)
+#To see whether or not null values are removed.
+summary(all_trips_v2)
+```
+```{r}
+#Remove duplicates from trip_id
+all_trips_v3 <- all_trips_v2 %>%
+  distinct(trip_id, .keep_all = TRUE)
+colnames(all_trips_v3)
+dim(all_trips_v3)
+dim(all_trips_v2)
+
+```
+
+## Analyze
+Finding the average ,maximum ,minimum and mid point of ride length and then compare it for both types of members(user_type).
+```{r}
+#straight average (total ride length / rides)
+mean(all_trips_v2$ride_length) 
+#midpoint number in the ascending array of ride lengths
+median(all_trips_v2$ride_length) 
+#longest ride
+max(all_trips_v2$ride_length)
+ #shortest ride
+min(all_trips_v2$ride_length)
+
+```
+
+```{r}
+#To find out whether ride_length can be different depends on user_type.
+
+
+all_trips_v2%>%
+  group_by(user_type)%>%
+  summarize(average_ride_length = mean(ride_length))
+
+all_trips_v2%>%
+  group_by(user_type)%>%
+  summarize(maximum_length = max(ride_length))
+
+all_trips_v2%>%
+  group_by(user_type)%>%
+  summarize(minimum_length = min(ride_length))
+
+```
+```{r}
+# To find the average ride time by each day
+
+# we notice that the days of week are unordered, so ordered it correctly
+all_trips_v2$day_of_week <- ordered(all_trips_v2$day_of_week, levels=c("Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"))
+
+#Run it again
+all_trips_v2%>%
+  group_by(user_type, day_of_week)%>%
+  summarize(average_ride_length = mean(ride_length),.groups = "drop")
+# another method of above code is by using aggregate function,
+# aggregate(all_trips_v2$ride_length ~ all_trips_v2$user_type + all_trips_v2$day_of_week,FUN=mean)
+
+```
+
+
+```{r}
+#count the number of rides for each day by each user type.
+all_trips_v2 %>%
+  group_by(user_type, day_of_week) %>%
+  summarise(number_of_ride = n(), .groups = 'drop') %>%
+  arrange(user_type,day_of_week)
+
+  
+```
+
+```{r}
+#count the number of rides for each month by each user type.
+all_trips_v2 %>%
+  group_by(user_type, month) %>%
+  summarise(number_of_ride = n(), .groups = 'drop') %>%
+  arrange(user_type,month)
+```
+
+**Findings:**
++ Casual riders are more likely to take ride on weekend than member riders.
++ Summer is peak season for both riders.
+```{r}
+# average ride length by month
+all_trips_v2 %>%
+  group_by(user_type, month) %>%
+  summarise(average_ride_length = mean(ride_length), .groups = "drop") %>%
+  arrange(month)
+
+```
+
+** Findings **
++  Casual rider's trip is longer than membership rider's in any season.
++ All users take longer trips on weekends and summer.
+
+```{r}
+# average ride length by day
+all_trips_v2 %>%
+  group_by(user_type, day) %>%
+  summarise(average_ride_length = mean(ride_length), .groups = "drop") %>%
+  arrange(day)
+
+# number of rides by day
+all_trips_v2 %>%
+  group_by(user_type, day) %>%
+  summarise(number_of_rides = n(), .groups = "drop") %>%
+  arrange(day)
+
+
+```
+```{r}
+#average ride length on weekends.
+all_trips_v2 %>%
+  group_by(user_type, day_of_week) %>%
+  summarise(average_ride_length = mean(ride_length), .groups = "drop") %>%
+  filter(day_of_week %in% c("Saturday","Sunday"))
+  
+#number of rides on weekends
+all_trips_v2 %>% 
+  group_by(user_type,day_of_week) %>% 
+  summarize(number_of_rides = n(),.groups = "drop") %>% 
+  filter(day_of_week %in% c("Saturday","Sunday"))
+```
+
+```{r}
+#Top 10 stations for each user type, based on number of trips.
+
+popular_stations <- all_trips %>%
+  # It takes the columns start_station and end_station and combines them into two new columns: key , station_name is another column.
+  gather(key, station_name, start_station, end_station) %>%
+  group_by(user_type, station_name) %>%
+  #since each trip is represented twice (once for start_station and once for end_station), it divides the count (n()) by 2 to get the actual number of trips.
+  summarise(number_trip = n()/2,.groups = "drop_last") %>%
+  # sort number of trips from highest to lowest
+  arrange(desc(number_trip)) %>% 
+  drop_na() %>% 
+  # Top 10 users for each user type
+  slice(1:10) 
+
+popular_stations
+
+```
+
+
+
+## Share 
+
+```{r}
+# average ride length by days of week
+all_trips_v2 %>%
+  group_by(user_type, day_of_week) %>%
+  summarise(average_ride_length = mean(ride_length), .groups = 'drop') %>%
+  ggplot(aes(x=day_of_week, y =average_ride_length, fill= user_type))+
+    geom_bar(position = "dodge", stat = "identity")
+
+# number of rides by days of week
+all_trips_v2 %>%
+  group_by(user_type, day_of_week) %>%
+  summarise(number_of_ride = n(), .groups = 'drop') %>%
+  ggplot(aes(x=day_of_week, y =number_of_ride, fill= user_type))+
+    geom_bar(position = "dodge", stat = "identity")
+```
+
+
+```{r}
+# average ride length by month
+all_trips_v2 %>%
+  group_by(user_type, month) %>%
+  summarise(average_ride_length = mean(ride_length), .groups = "drop") %>%
+  ggplot(aes(x=month, y =average_ride_length, fill= user_type))+
+    geom_bar(position = "dodge", stat = "identity")
+
+# number of rides by month
+all_trips_v2 %>%
+  group_by(user_type, month) %>%
+  summarise(number_of_rides = n(), .groups = "drop") %>%
+  ggplot(aes(x=month, y= number_of_rides, fill= user_type))+
+    geom_bar(position = "dodge", stat = "identity")
+
+```
+
+```{r}
+# average ride length on weekends(mainly satuday, sunday)
+all_trips_v2 %>%
+  group_by(user_type, day_of_week) %>%
+  summarise(average_ride_length = mean(ride_length), .groups = 'drop') %>%
+  filter(day_of_week %in% c("Saturday", "Sunday")) %>%
+  ggplot(aes(x=day_of_week, y =average_ride_length, fill= user_type))+
+    geom_bar(position = "dodge", stat = "identity")
+
+# number of rides on weekends(mainly saturday, sunday)
+all_trips_v2 %>%
+  group_by(user_type, day_of_week) %>%
+  summarise(number_of_ride = n(), .groups = 'drop') %>%
+  filter(day_of_week %in% c("Saturday", "Sunday")) %>%
+  ggplot(aes(x=day_of_week, y =number_of_ride, fill= user_type))+
+    geom_bar(position = "dodge", stat = "identity")
+
+```
+
+```{r}
+
+# number of rides by days.
+all_trips %>%
+  group_by(user_type, day) %>%
+  summarise(number_of_ride = n(),.groups = "drop")%>%
+  ggplot(aes(x= day, y= number_of_ride, color = user_type)) +
+  geom_point() 
+
+```
+```{r}
+# the top 10 most visited stations for casual riders.
+
+popular_stations %>% 
+  head(10) %>% 
+  ggplot(aes(number_trip, reorder(station_name, number_trip))) +
+  geom_col(color="green")+
+  # To customize the axis labels, breaks (tick marks), and other properties related to the x-axis.
+  scale_x_continuous(labels = scales::label_number_si() #automatically formats numeric labels in a human-readable way with SI unit prefixes (eg,"K" for thosands)
+                     ,breaks = seq(0, 65000, 5000)) + # create a tick marks after every 5000 until 65000
+  labs(title = "The top 10 most visited stations for casual riders", x = "Number of trips", y = "Station name")
+
+# the top 10 most visited staions for member riders.
+popular_stations %>% 
+  tail(10) %>% 
+  ggplot(aes(number_trip, reorder(station_name, number_trip))) +
+  geom_col(color="green")+
+  # To customize the axis labels, breaks (tick marks), and other properties related to the x-axis.
+  scale_x_continuous(labels = scales::label_number_si() #automatically formats numeric labels in a human-readable way with SI unit prefixes (eg,"K" for thosands)
+                     ,breaks = seq(0, 65000, 5000)) + # create a tick marks after every 5000 until 65000
+  labs(title = "The top 10 most visited stations for member riders", x = "Number of trips", y = "Station name")
+ 
+```
+
+
+```{r}
+
+write.csv(all_trips_v2, file = 'C://Users//saura//OneDrive//Pictures//Documents//cyclic bike share analysis//all_trips_v2_file.csv')
+
+```
+
+
