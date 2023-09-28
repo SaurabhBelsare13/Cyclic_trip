@@ -15,7 +15,7 @@ The purpose of analysis is to understand how annual members and casual riders us
 - Cyclistic marketing analytics team: A team of data analysts who are responsible for collecting, analyzing, and reporting data that helps guide Cyclistic marketing strategy. You joined this team six months ago and have been busy learning about Cyclistic’s mission and business goals — as well as how you, as a junior data analyst, can help Cyclistic achieve them.
 - Cyclistic executive team: The notoriously detail-oriented executive team will decide whether to approve the recommended marketing program.
 
-##Data Sources
+## Data Sources
 Cyclistic’s historical [trip data](https://divvy-tripdata.s3.amazonaws.com/index.html) from Jan 2021 to Dec 2021 is used in this project. The data is usable and is in .csv format. It has clean dates and times, with no outliers. It is relevant to the presented problem. The data has been made available by Motivate International Inc. under [this](https://divvybikes.com/data-license-agreement) license. This is public data that you can use to explore how different customer types are using Cyclistic bikes.
 
 ## Project Activities
@@ -33,6 +33,18 @@ Cyclistic’s historical [trip data](https://divvy-tripdata.s3.amazonaws.com/ind
 
 ## Tools Used: R 
 The detailed step-wise analysis in R can be accessed here.
+
+## Findings
+- Casual riders are more likely to take ride on weekend than member riders.
+- Casual riders have less rides as compared to members but have higher average ride lengths.
+- Summer is peak season for both riders.
+- Casual rider's trip is longer than membership rider's in any season.
+- Most visited station for casual riders is 'Streeter Dr & Grand Ave'
+- Most visited station for member rieders is 'Clarke St & Elm St'
+
+## Recomendtations
+- The best time to launch the new marketing campaign on **Weekends** and **Holidays**, in the month of **June** to **September**.
+- A targeted strategy at most popular station will reach the maximum number of Casual riders.
 
 
 
