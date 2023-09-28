@@ -32,7 +32,7 @@ Cyclistic’s historical [trip data](https://divvy-tripdata.s3.amazonaws.com/ind
 - Implementation of recommendations.
 
 ## Tools Used: R 
-The detailed step-wise analysis in R can be accessed [here](Cyclic_trip/code.md).
+The detailed step-wise analysis in R can be accessed [here](Cyclic_trip/blob/main/code.md).
 
 ## Findings
 - Casual riders are more likely to take ride on weekend than member riders.
