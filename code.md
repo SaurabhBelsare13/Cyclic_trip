@@ -1,8 +1,7 @@
-**title: "Case Study: How Does a Bike-Share Navigate Speed?"
-author: "Saurabh Belsare"
-date: "2023-09-23"
-output: html_document**
----
+_**Title:** "Case Study: How Does a Bike-Share Navigate Speed?"<br>
+**Author:** "Saurabh Belsare"<br>
+**Date:** "2023-09-23"<br>_
+
 ## Senario
 
 I am a junior data analyst working in the marketing analyst team at Cyclistic, a bike-share company in Chicago. The director of marketing believes the company’s future success depends on maximizing the number of annual memberships. Therefore, my team wants to understand how casual riders and annual members use Cyclistic bikes differently. From these insights, my team will design a new marketing strategy to convert casual riders into annual members. 
@@ -26,13 +25,13 @@ In order to maximize the number of annual membership, I, data analyst, will find
 
 ## Prepare
 
-**1. Data Source ** :-Cyclistic’s historical trip data , you can acess the data [here](https://divvy-tripdata.s3.amazonaws.com/index.html). 
+**1. Data Source** :-Cyclistic’s historical trip data , you can acess the data [here](https://divvy-tripdata.s3.amazonaws.com/index.html). 
 
-**2. How data is organized ** :-The data is organized by monthly in .csv format. I will use Divvy’s, a bike-share program based in Chicago, data from Jan 2021 – Dec 2021 to complete this case study. 
+**2. How data is organized** :-The data is organized by monthly in .csv format. I will use Divvy’s, a bike-share program based in Chicago, data from Jan 2021 – Dec 2021 to complete this case study. 
 
-**3. Does data is ROCCC? ** :-The data is Reliable, Original, Comprehensive, Current and Cited. The data has been made available by Motivate International Inc. under this [license](https://divvybikes.com/data-license-agreement).
+**3. Does data is ROCCC?** :-The data is Reliable, Original, Comprehensive, Current and Cited. The data has been made available by Motivate International Inc. under this [license](https://divvybikes.com/data-license-agreement).
 
-**4. Limitations ** :- Data-privacy issues prohibit you from using riders’ personally identifiable information. This means that you won’t be able to connect pass purchases to credit card numbers to determine if casual riders live in the Cyclistic service area or if they have purchased multiple single passes.
+**4. Limitations** :- Data-privacy issues prohibit you from using riders’ personally identifiable information. This means that you won’t be able to connect pass purchases to credit card numbers to determine if casual riders live in the Cyclistic service area or if they have purchased multiple single passes.
 
 
 
